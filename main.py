@@ -44,5 +44,6 @@ async def websocket_endpoint(websocket: WebSocket, room_code: str, player_id: st
                 del rooms[room_code]
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    # Railway сам подставит нужный порт в переменную PORT
+    port = int(os.environ.get("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)
