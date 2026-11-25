@@ -84,6 +84,7 @@
 </div>
 
 <script>
+  // Твоя ссылка на сервер Railway
   const SERVER_URL = "wss://fulfilling-hope-production-d354c364.up.railway.app/ws"; 
 
   let tg = window.Telegram.WebApp; tg.expand();
@@ -138,14 +139,44 @@
   connectBtn.onclick = () => {
     const code = codeInput.value.trim().toUpperCase();
     if(code.length < 3) return alert("Неверный код");
-    codeModal.classList.remove('active');
+    
+    statusText.innerText = "Подключение...";
+    connectBtn.disabled = true;
     connectWebSocket(code, 'black');
   };
 
   function connectWebSocket(roomCode, color) {
     if (ws) ws.close();
     myColor = (color === 'white') ? 'w' : 'b';
-    ws = new WebSocket(`${SERVER_URL}/${roomCode}/${color}`);
+    
+    try {
+      ws = new WebSocket(`${SERVER_URL}/${roomCode}/${color}`);
+    } catch(e) {
+      alert("Ошибка создания WebSocket: " + e.message);
+      return;
+    }
+
+    // Таймаут на подключение (5 секунд)
+    const timeout = setTimeout(() => {
+        if(ws.readyState !== WebSocket.OPEN) {
+            alert("Сервер не отвечает. Проверь, что Railway работает (зеленая точка).");
+            ws.close();
+            connectBtn.disabled = false;
+            statusText.innerText = "Введите код друга";
+        }
+    }, 5000);
+
+    ws.onopen = () => {
+        clearTimeout(timeout);
+        console.log("Подключено");
+    };
+
+    ws.onerror = (e) => {
+        clearTimeout(timeout);
+        alert("Ошибка подключения. Проверь логи Railway.");
+        connectBtn.disabled = false;
+        statusText.innerText = "Введите код друга";
+    };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
