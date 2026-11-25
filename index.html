@@ -85,7 +85,7 @@
 
 <script>
   // Твоя ссылка на сервер Railway (без порта, Railway сам разберется)
-  const SERVER_URL = "wss://fulfilling-hope-production-d354c364.up.railway.app/ws"; 
+  const SERVER_URL = "wss://fulfilling-hope-production-d354c364.up.railway.app:8080/ws"; 
 
   let tg = window.Telegram.WebApp; tg.expand();
   let ws = null; let myColor = 'w'; let turn = 'w'; let selectedPiece = null; let validMoves = []; let gameOver = false; let board = [];
