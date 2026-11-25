@@ -84,7 +84,7 @@
 </div>
 
 <script>
-  // Твоя ссылка на сервер Railway
+  // Твоя ссылка на сервер Railway (без порта, Railway сам разберется)
   const SERVER_URL = "wss://fulfilling-hope-production-d354c364.up.railway.app/ws"; 
 
   let tg = window.Telegram.WebApp; tg.expand();
@@ -156,7 +156,6 @@
       return;
     }
 
-    // Таймаут на подключение (5 секунд)
     const timeout = setTimeout(() => {
         if(ws.readyState !== WebSocket.OPEN) {
             alert("Сервер не отвечает. Проверь, что Railway работает (зеленая точка).");
@@ -166,11 +165,7 @@
         }
     }, 5000);
 
-    ws.onopen = () => {
-        clearTimeout(timeout);
-        console.log("Подключено");
-    };
-
+    ws.onopen = () => { clearTimeout(timeout); console.log("Подключено"); };
     ws.onerror = (e) => {
         clearTimeout(timeout);
         alert("Ошибка подключения. Проверь логи Railway.");
@@ -308,4 +303,4 @@
   backToMenuBtn.onclick = () => { if(ws) ws.close(); goToMenu(); };
 </script>
 </body>
-</html>
+ </html>
